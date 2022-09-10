@@ -18,7 +18,7 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<List<UserDTO>> getUsers() {
-    return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    return new ResponseEntity<>(service.getUsers(), HttpStatus.OK);
   }
 
   @PostMapping
@@ -29,24 +29,20 @@ public class UserController {
 
   @PutMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userRequest, @PathVariable("id") Integer id) {
-    UserDTO userFound = service.getUser(id);
-    if(userFound == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    } else {
-      UserDTO user = service.updateUser(userRequest);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+  public ResponseEntity<Void> updateUser(@RequestBody UserDTO userRequest, @PathVariable("id") Integer id) {
+    service.updateUser(userRequest, id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id) {
-    UserDTO userFound = service.getUser(id);
-    if(userFound == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    } else {
-      service.deleteUser(id);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    service.deleteUser(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Integer id) {
+    UserDTO user = service.getUser(id);
+    return ResponseEntity.ok().body(user);
   }
 }
